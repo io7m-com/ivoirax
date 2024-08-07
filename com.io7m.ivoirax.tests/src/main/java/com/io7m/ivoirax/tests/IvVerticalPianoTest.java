@@ -193,18 +193,20 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
     piano.setOnKeyEventHandler(events::add);
-    clickKey(robot, piano, 120);
+    clickKey(robot, piano, 2);
 
-    checkPressRelease(events, 0, 120);
+    checkPressRelease(events, 0, 2);
   }
 
   /**
@@ -227,18 +229,20 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
     piano.setOnKeyEventHandler(events::add);
-    clickKey(robot, piano, 121);
+    clickKey(robot, piano, 3);
 
-    checkPressRelease(events, 0, 121);
+    checkPressRelease(events, 0, 3);
   }
 
   /**
@@ -261,11 +265,13 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
@@ -294,11 +300,13 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
@@ -327,26 +335,28 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
     piano.setOnKeyEventHandler(events::add);
     piano.naturalKeyHeightProperty().set(32.0);
-    clickKey(robot, piano, 126);
-    clickKey(robot, piano, 125);
+    clickKey(robot, piano, 6);
+    clickKey(robot, piano, 5);
     piano.naturalKeyHeightProperty().set(64.0);
-    clickKey(robot, piano, 126);
-    clickKey(robot, piano, 125);
+    clickKey(robot, piano, 6);
+    clickKey(robot, piano, 5);
 
-    checkPressRelease(events, 0, 126);
-    checkPressRelease(events, 2, 125);
-    checkPressRelease(events, 4, 126);
-    checkPressRelease(events, 6, 125);
+    checkPressRelease(events, 0, 6);
+    checkPressRelease(events, 2, 5);
+    checkPressRelease(events, 4, 6);
+    checkPressRelease(events, 6, 5);
   }
 
   /**
@@ -369,11 +379,13 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
@@ -381,7 +393,7 @@ public final class IvVerticalPianoTest
 
     robot.evaluate(() -> {
       final var y =
-        piano.yPositionCenterOf(120);
+        piano.yPositionCenterOf(1);
       final var position =
         piano.localToScreen(16.0, y);
 
@@ -394,7 +406,7 @@ public final class IvVerticalPianoTest
       return null;
     });
 
-    for (int index = 120; index < 123; ++index) {
+    for (int index = 1; index < 4; ++index) {
       final int finalIndex = index;
       robot.evaluate(() -> {
         final var y =
@@ -415,9 +427,9 @@ public final class IvVerticalPianoTest
     robot.waitForFrames(100);
 
     dumpEvents(events);
-    checkPressRelease(events, 0, 120);
-    checkPressRelease(events, 2, 121);
-    checkPressRelease(events, 4, 122);
+    checkPressRelease(events, 0, 1);
+    checkPressRelease(events, 2, 2);
+    checkPressRelease(events, 4, 3);
   }
 
   private void dumpEvents(
@@ -446,11 +458,13 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
@@ -458,7 +472,7 @@ public final class IvVerticalPianoTest
 
     robot.evaluate(() -> {
       final var y =
-        piano.yPositionCenterOf(120);
+        piano.yPositionCenterOf(0);
       final var position =
         piano.localToScreen(16.0, y);
 
@@ -471,7 +485,7 @@ public final class IvVerticalPianoTest
       return null;
     });
 
-    for (int index = 120; index < 124; ++index) {
+    for (int index = 0; index < 4; ++index) {
       final int finalIndex = index;
       robot.evaluate(() -> {
         final var y =
@@ -491,10 +505,10 @@ public final class IvVerticalPianoTest
     });
     robot.waitForFrames(100);
 
-    checkPressRelease(events, 0, 120);
-    checkPressRelease(events, 2, 121);
-    checkPressRelease(events, 4, 122);
-    checkPressRelease(events, 6, 123);
+    checkPressRelease(events, 0, 0);
+    checkPressRelease(events, 2, 1);
+    checkPressRelease(events, 4, 2);
+    checkPressRelease(events, 6, 3);
   }
 
   private static void checkPressRelease(
@@ -600,11 +614,13 @@ public final class IvVerticalPianoTest
 
     final var pianoView = new AtomicReference<IvVerticalPiano>();
     commander.stageNewAndWait(newStage -> {
-      final var view = new IvVerticalPiano();
+      final var view = new IvVerticalPiano(12);
       pianoView.set(view);
       newStage.setScene(new Scene(view));
-      newStage.setHeight(800.0);
+      newStage.setHeight(400.0);
       newStage.setWidth(256.0);
+      newStage.setX(128.0);
+      newStage.setY(128.0);
     });
 
     final var piano = pianoView.get();
