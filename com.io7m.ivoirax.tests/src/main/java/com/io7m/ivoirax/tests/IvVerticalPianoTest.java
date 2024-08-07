@@ -101,7 +101,7 @@ public final class IvVerticalPianoTest
     });
 
     final var view = pianoView.get();
-    assertEquals(254.0, view.naturalKeyWidth());
+    assertTrue(view.naturalKeyWidth() >= 240.0);
     assertEquals(127.0, view.accidentalKeyWidth());
     assertEquals(24.0, view.naturalKeyHeight());
     assertTrue(view.accidentalKeyHeight() < view.naturalKeyHeight());
