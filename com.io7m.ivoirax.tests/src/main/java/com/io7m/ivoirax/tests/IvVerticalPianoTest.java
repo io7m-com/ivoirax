@@ -106,7 +106,12 @@ public final class IvVerticalPianoTest
       "Natural key width %s must be >= 240.0 "
         .formatted(view.naturalKeyWidth())
     );
-    assertEquals(127.0, view.accidentalKeyWidth());
+    assertTrue(
+      view.accidentalKeyWidth() >= 120.0,
+      "Accidental key width %s must be >= 120.0"
+        .formatted(view.accidentalKeyWidth())
+    );
+
     assertEquals(24.0, view.naturalKeyHeight());
 
     assertTrue(

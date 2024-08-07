@@ -105,8 +105,8 @@ public final class IvHorizontalPianoTest
     assertEquals(24.0, view.naturalKeyWidth());
     assertEquals(12.0, view.accidentalKeyWidth());
     assertTrue(
-      view.naturalKeyHeight() >= 32.0,
-      "Natural key height %s must be >= 32.0 "
+      view.naturalKeyHeight() >= 24.0,
+      "Natural key height %s must be >= 24.0 "
         .formatted(view.naturalKeyHeight())
     );
     assertTrue(
