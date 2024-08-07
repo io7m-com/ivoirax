@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<div xmlns="http://www.w3.org/1999/xhtml">
+  <ul>
+    <li>Simple piano display component.</li>
+    <li>Display a configurable number of octaves.</li>
+    <li>Capture key press/release events.</li>
+    <li>Available in horizontal and vertical forms.</li>
+    <li>Written in pure Java 21.</li>
+    <li><a href="https://www.osgi.org/">OSGi</a>-ready.</li>
+    <li>ISC license.</li>
+  </ul>
+</div>
