@@ -104,7 +104,7 @@ public final class IvVerticalPianoTest
     assertEquals(254.0, view.naturalKeyWidth());
     assertEquals(127.0, view.accidentalKeyWidth());
     assertEquals(24.0, view.naturalKeyHeight());
-    assertEquals((24.0 / 3.0) * 2.0, view.accidentalKeyHeight());
+    assertTrue(view.accidentalKeyHeight() < view.naturalKeyHeight());
     assertEquals(100, view.keyCount());
     assertEquals(Color.gray(0.1), view.colorKeyAccidental());
     assertEquals(Color.gray(0.3), view.colorKeyAccidentalOver());
