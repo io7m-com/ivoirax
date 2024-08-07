@@ -101,10 +101,29 @@ public final class IvVerticalPianoTest
     });
 
     final var view = pianoView.get();
-    assertTrue(view.naturalKeyWidth() >= 240.0);
+    assertTrue(
+      view.naturalKeyWidth() >= 240.0,
+      "Natural key width %s must be >= 240.0 "
+        .formatted(view.naturalKeyWidth())
+    );
     assertEquals(127.0, view.accidentalKeyWidth());
     assertEquals(24.0, view.naturalKeyHeight());
-    assertTrue(view.accidentalKeyHeight() < view.naturalKeyHeight());
+
+    assertTrue(
+      view.accidentalKeyWidth() < view.naturalKeyWidth(),
+      "Accidental key width %s must be < natural key width %s"
+        .formatted(
+          view.accidentalKeyWidth(),
+          view.naturalKeyWidth())
+    );
+    assertTrue(
+      view.accidentalKeyHeight() < view.naturalKeyHeight(),
+      "Accidental key height %s must be < natural key height %s"
+        .formatted(
+          view.accidentalKeyHeight(),
+          view.naturalKeyHeight())
+    );
+
     assertEquals(100, view.keyCount());
     assertEquals(Color.gray(0.1), view.colorKeyAccidental());
     assertEquals(Color.gray(0.3), view.colorKeyAccidentalOver());
