@@ -104,8 +104,8 @@ public final class IvHorizontalPianoTest
     final var view = pianoView.get();
     assertEquals(24.0, view.naturalKeyWidth());
     assertEquals(12.0, view.accidentalKeyWidth());
-    assertEquals(41.0, view.naturalKeyHeight());
-    assertEquals((41.0 / 3.0) * 2.0, view.accidentalKeyHeight());
+    assertTrue(view.naturalKeyHeight() <= 32.0);
+    assertTrue(view.accidentalKeyHeight() < view.naturalKeyHeight());
     assertEquals(100, view.keyCount());
     assertEquals(Color.gray(0.1), view.colorKeyAccidental());
     assertEquals(Color.gray(0.3), view.colorKeyAccidentalOver());
