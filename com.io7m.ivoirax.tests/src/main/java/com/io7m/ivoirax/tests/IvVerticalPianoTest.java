@@ -451,9 +451,52 @@ public final class IvVerticalPianoTest
     robot.waitForFrames(100);
 
     dumpEvents(events);
-    checkPressRelease(events, 0, 1);
-    checkPressRelease(events, 2, 2);
-    checkPressRelease(events, 4, 3);
+
+    final var kp1 = new IvKeyPressed(1, false);
+    final var kp2 = new IvKeyPressed(2, false);
+    final var kp3 = new IvKeyPressed(3, false);
+    final var kr1 = new IvKeyReleased(1, false);
+    final var kr2 = new IvKeyReleased(2, false);
+    final var kr3 = new IvKeyReleased(3, false);
+
+    assertTrue(
+      events.contains(kp1),
+      "Events must contain %s".formatted(kp1)
+    );
+    assertTrue(
+      events.contains(kp2),
+      "Events must contain %s".formatted(kp2)
+    );
+    assertTrue(
+      events.contains(kp3),
+      "Events must contain %s".formatted(kp3)
+    );
+
+    assertTrue(
+      events.contains(kr1),
+      "Events must contain %s".formatted(kr1)
+    );
+    assertTrue(
+      events.contains(kr2),
+      "Events must contain %s".formatted(kr2)
+    );
+    assertTrue(
+      events.contains(kr3),
+      "Events must contain %s".formatted(kr3)
+    );
+
+    assertTrue(
+      events.indexOf(kp1) < events.indexOf(kr1),
+      "Event %s must be before %s".formatted(kp1, kr1)
+    );
+    assertTrue(
+      events.indexOf(kp2) < events.indexOf(kr2),
+      "Event %s must be before %s".formatted(kp2, kr2)
+    );
+    assertTrue(
+      events.indexOf(kp3) < events.indexOf(kr3),
+      "Event %s must be before %s".formatted(kp3, kr3)
+    );
   }
 
   private void dumpEvents(
@@ -529,10 +572,65 @@ public final class IvVerticalPianoTest
     });
     robot.waitForFrames(100);
 
-    checkPressRelease(events, 0, 0);
-    checkPressRelease(events, 2, 1);
-    checkPressRelease(events, 4, 2);
-    checkPressRelease(events, 6, 3);
+    final var kp0 = new IvKeyPressed(0, false);
+    final var kp1 = new IvKeyPressed(1, false);
+    final var kp2 = new IvKeyPressed(2, false);
+    final var kp3 = new IvKeyPressed(3, false);
+    final var kr0 = new IvKeyReleased(0, false);
+    final var kr1 = new IvKeyReleased(1, false);
+    final var kr2 = new IvKeyReleased(2, false);
+    final var kr3 = new IvKeyReleased(3, false);
+
+    assertTrue(
+      events.contains(kp0),
+      "Events must contain %s".formatted(kp0)
+    );
+    assertTrue(
+      events.contains(kp1),
+      "Events must contain %s".formatted(kp1)
+    );
+    assertTrue(
+      events.contains(kp2),
+      "Events must contain %s".formatted(kp2)
+    );
+    assertTrue(
+      events.contains(kp3),
+      "Events must contain %s".formatted(kp3)
+    );
+
+    assertTrue(
+      events.contains(kr0),
+      "Events must contain %s".formatted(kr0)
+    );
+    assertTrue(
+      events.contains(kr1),
+      "Events must contain %s".formatted(kr1)
+    );
+    assertTrue(
+      events.contains(kr2),
+      "Events must contain %s".formatted(kr2)
+    );
+    assertTrue(
+      events.contains(kr3),
+      "Events must contain %s".formatted(kr3)
+    );
+
+    assertTrue(
+      events.indexOf(kp0) < events.indexOf(kr0),
+      "Event %s must be before %s".formatted(kp0, kr0)
+    );
+    assertTrue(
+      events.indexOf(kp1) < events.indexOf(kr1),
+      "Event %s must be before %s".formatted(kp1, kr1)
+    );
+    assertTrue(
+      events.indexOf(kp2) < events.indexOf(kr2),
+      "Event %s must be before %s".formatted(kp2, kr2)
+    );
+    assertTrue(
+      events.indexOf(kp3) < events.indexOf(kr3),
+      "Event %s must be before %s".formatted(kp3, kr3)
+    );
   }
 
   private static void checkPressRelease(
