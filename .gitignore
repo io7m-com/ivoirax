@@ -1,0 +1,5 @@
+*.iml
+.idea
+pom.xml.versionsBackup
+target
+config.json
