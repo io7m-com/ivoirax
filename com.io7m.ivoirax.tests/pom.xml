@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.io7m.ivoirax</groupId>
     <artifactId>com.io7m.ivoirax</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
 
   <artifactId>com.io7m.ivoirax.tests</artifactId>
