@@ -19,7 +19,7 @@
  */
 
 @Export
-@Version("1.0.0")
+@Version("1.1.0")
 package com.io7m.ivoirax.core;
 
 import org.osgi.annotation.bundle.Export;
