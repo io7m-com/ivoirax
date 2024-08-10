@@ -18,11 +18,18 @@
 package com.io7m.ivoirax.core;
 
 /**
- * The type of piano keyboard events.
+ * The cursor is no longer over a key.
+ *
+ * @param index The key index
  */
 
-public sealed interface IvKeyEventType
-  permits IvKeyExit, IvKeyEnter, IvKeyPressed, IvKeyReleased
+public record IvKeyExit(
+  int index)
+  implements IvKeyEventType
 {
-
+  @Override
+  public String toString()
+  {
+    return "[IvKeyExit %d]".formatted(this.index);
+  }
 }

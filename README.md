@@ -35,6 +35,42 @@ A JavaFX piano component.
 Add a `IvHorizontalPiano` or `IvVerticalPiano` to your JavaFX layouts. Set a
 `IvKeyEventHandlerType` function to receive key events.
 
+### Key Terminology
+
+Keys are divided into _naturals_ (the white keys) and _accidentals_
+(the black keys), mirroring the standard names from music theory.
+
+The reason for avoiding white/black terminology is that the piano controls
+allow for complete control over key colors, and so keys may not actually be
+"black" or "white":
+
+![colors](src/site/resources/colors.png)
+
+### Events
+
+The piano controls publish events in response to user input. The following
+events are published:
+
+  * `IvKeyEnter`; the mouse cursor has moved over a specific key.
+  * `IvKeyExit`; the mouse cursor is no longer over the specific key that it was previously over.
+  * `IvKeyPressed`; the user has pressed the primary mouse button whilst over a key.
+  * `IvKeyReleased`; the user has released the primary mouse button whilst over a key that was previously pressed.
+
+The implementation attempts to provide sensible semantics with regard to
+event delivery for individual keys. For example, for a given key `k`, the
+implementation won't publish a `IvKeyReleased` event for `k` _before_ it
+publishes a `IvKeyPressed` event for `k`. Due to the somewhat non-deterministic
+nature of input event handling between the underlying platforms, the
+implementation can't make many guarantees on the ordering between events
+for _different_ keys. For a given key `k`, the implementation can largely
+be trusted to publish events in the following orders:
+
+```
+IvKeyEnter k ⇒ IvKeyPressed k ⇒ IvKeyReleased k ⇒ IvKeyExit k
+
+IvKeyEnter k ⇒ IvKeyExit k
+```
+
 ## Demo
 
 A [demo application](com.io7m.ivoirax.demo) is included.
