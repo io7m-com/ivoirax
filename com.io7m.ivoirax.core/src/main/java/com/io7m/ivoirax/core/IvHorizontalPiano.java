@@ -56,23 +56,26 @@ public final class IvHorizontalPiano
 
   private static final int KEY_COUNT_DEFAULT = (12 * 12) + 1;
 
+  private IvKeyEventHandlerType keyEvent;
+  private IvKeyEventType eventPrevious;
+  private final ArrayList<KeyNatural> naturalKeys;
   private final DoubleBinding accidentalKeyHeight;
   private final DoubleBinding accidentalKeyWidth;
   private final HashMap<Integer, Key> keysAll;
   private final ObservableMap<Integer, KeyPressed> keysPressed;
   private final ReadOnlyDoubleProperty naturalKeyHeight;
   private final SimpleDoubleProperty naturalKeyWidth;
+  private final SimpleObjectProperty<Font> keyFont;
   private final SimpleObjectProperty<Paint> colorKeyAccidental;
   private final SimpleObjectProperty<Paint> colorKeyAccidentalOver;
   private final SimpleObjectProperty<Paint> colorKeyAccidentalPressed;
   private final SimpleObjectProperty<Paint> colorKeyNatural;
   private final SimpleObjectProperty<Paint> colorKeyNaturalOver;
   private final SimpleObjectProperty<Paint> colorKeyNaturalPressed;
-  private final SimpleObjectProperty<Font> keyFont;
-  private final int keyCount;
-  private final ArrayList<KeyNatural> naturalKeys;
+  private final SimpleObjectProperty<Paint> colorStrokeAccidental;
+  private final SimpleObjectProperty<Paint> colorStrokeNatural;
   private final SimpleObjectProperty<Paint> keyTextColor;
-  private IvKeyEventHandlerType keyEvent;
+  private final int keyCount;
 
   /**
    * A horizontal piano.
@@ -111,6 +114,11 @@ public final class IvHorizontalPiano
     this.keyTextColor =
       new SimpleObjectProperty<>(Color.gray(0.0));
 
+    this.colorStrokeNatural =
+      new SimpleObjectProperty<>(Color.gray(0.0));
+    this.colorStrokeAccidental =
+      new SimpleObjectProperty<>(Color.gray(0.0));
+
     this.colorKeyNatural =
       new SimpleObjectProperty<>(Color.gray(1.0));
     this.colorKeyNaturalOver =
@@ -124,6 +132,16 @@ public final class IvHorizontalPiano
       new SimpleObjectProperty<>(Color.gray(0.3));
     this.colorKeyAccidentalPressed =
       new SimpleObjectProperty<>(Color.gray(0.5));
+
+    this.colorKeyAccidental.addListener(observable -> this.updateColors());
+    this.colorKeyAccidentalOver.addListener(observable -> this.updateColors());
+    this.colorKeyAccidentalPressed.addListener(observable -> this.updateColors());
+    this.colorKeyNatural.addListener(observable -> this.updateColors());
+    this.colorKeyNaturalOver.addListener(observable -> this.updateColors());
+    this.colorKeyNaturalPressed.addListener(observable -> this.updateColors());
+    this.colorStrokeAccidental.addListener(observable -> this.updateColors());
+    this.colorStrokeNatural.addListener(observable -> this.updateColors());
+    this.keyTextColor.addListener(observable -> this.updateColors());
 
     this.naturalKeyWidth =
       new SimpleDoubleProperty(24.0);
@@ -170,20 +188,42 @@ public final class IvHorizontalPiano
     };
   }
 
+  private void updateColors()
+  {
+    for (final var key : this.keysAll.values()) {
+      switch (key) {
+        case final KeyAccidental keyAccidental -> {
+          keyAccidental.setFill(this.colorKeyAccidental());
+        }
+        case final KeyNatural keyNatural -> {
+          keyNatural.setFill(this.colorKeyNatural());
+        }
+      }
+    }
+  }
+
   private void createAccidentalKeys()
   {
     for (final var naturalKey : this.naturalKeys) {
       final var sharpIndex = naturalKey.index() + 1;
       if (isAccidental(sharpIndex)) {
         final var accidentalKey = new KeyAccidental(sharpIndex);
-        accidentalKey.setStroke(Color.BLACK);
+        accidentalKey.strokeProperty()
+          .bind(this.colorStrokeAccidental);
+
         accidentalKey.setStrokeWidth(1.0);
         accidentalKey.setFill(this.colorKeyAccidental.get());
 
         accidentalKey.setOnMouseEntered(
-          event -> accidentalKey.setFill(this.colorKeyAccidentalOver.get()));
+          event -> {
+            accidentalKey.setFill(this.colorKeyAccidentalOver.get());
+            this.publishKeyEvent(new IvKeyEnter(accidentalKey.index()));
+          });
         accidentalKey.setOnMouseExited(
-          event -> accidentalKey.setFill(this.colorKeyAccidental.get()));
+          event -> {
+            accidentalKey.setFill(this.colorKeyAccidental.get());
+            this.publishKeyEvent(new IvKeyExit(accidentalKey.index()));
+          });
         accidentalKey.setOnMousePressed(
           event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
@@ -225,14 +265,21 @@ public final class IvHorizontalPiano
     for (var index = 0; index < this.keyCount; ++index) {
       if (!isAccidental(index)) {
         final var naturalKey = new KeyNatural(index);
-        naturalKey.setStroke(Color.BLACK);
+        naturalKey.strokeProperty().bind(this.colorStrokeNatural);
+
         naturalKey.setStrokeWidth(1.0);
         naturalKey.setFill(this.colorKeyNatural.get());
 
         naturalKey.setOnMouseEntered(
-          event -> naturalKey.setFill(this.colorKeyNaturalOver.get()));
+          event -> {
+            naturalKey.setFill(this.colorKeyNaturalOver.get());
+            this.publishKeyEvent(new IvKeyEnter(naturalKey.index()));
+          });
         naturalKey.setOnMouseExited(
-          event -> naturalKey.setFill(this.colorKeyNatural.get()));
+          event -> {
+            naturalKey.setFill(this.colorKeyNatural.get());
+            this.publishKeyEvent(new IvKeyExit(naturalKey.index()));
+          });
         naturalKey.setOnMousePressed(
           event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
@@ -301,6 +348,18 @@ public final class IvHorizontalPiano
   }
 
   @Override
+  public SimpleObjectProperty<Paint> colorStrokeKeyAccidentalProperty()
+  {
+    return this.colorStrokeAccidental;
+  }
+
+  @Override
+  public SimpleObjectProperty<Paint> colorStrokeKeyNaturalProperty()
+  {
+    return this.colorStrokeNatural;
+  }
+
+  @Override
   public SimpleObjectProperty<Paint> colorKeyAccidentalProperty()
   {
     return this.colorKeyAccidental;
@@ -334,6 +393,12 @@ public final class IvHorizontalPiano
   public SimpleObjectProperty<Paint> colorKeyNaturalPressedProperty()
   {
     return this.colorKeyNaturalPressed;
+  }
+
+  @Override
+  public SimpleObjectProperty<Paint> colorKeyTextProperty()
+  {
+    return this.keyTextColor;
   }
 
   /**
@@ -484,12 +549,49 @@ public final class IvHorizontalPiano
       if (keyDraggedLastOpt.isPresent()) {
         final var keyDraggedLast = keyDraggedLastOpt.get();
         if (keyDraggedLast != keyPicked) {
+          this.publishKeyEvent(new IvKeyExit(keyDraggedLast.index));
           this.keyPressedUnset(keyDraggedLast);
         }
       }
 
       keySource.setKeyDraggedOverLast(keyPicked);
+      this.publishKeyEvent(new IvKeyEnter(keyPicked.index));
       this.keyPressedSet(keyPicked, false);
+    }
+  }
+
+  /**
+   * There are fairly complex interactions between the order of JavaFX event
+   * deliveries, and the events that we publish ourselves based on the custom
+   * key dragging behaviour. The stream of published events are filtered
+   * slightly here to give more predictable semantics to consumers of the
+   * events. For example, we don't redundantly publish "key entered" events
+   * for keys that are already pressed.
+   */
+
+  private void publishKeyEvent(
+    final IvKeyEventType event)
+  {
+    if (Objects.equals(this.eventPrevious, event)) {
+      return;
+    }
+    this.eventPrevious = event;
+
+    switch (event) {
+      case final IvKeyEnter enter -> {
+        if (!this.keysPressed.containsKey(enter.index())) {
+          this.keyEvent.onKeyEvent(event);
+        }
+      }
+      case final IvKeyExit ignored -> {
+        this.keyEvent.onKeyEvent(event);
+      }
+      case final IvKeyPressed ignored -> {
+        this.keyEvent.onKeyEvent(event);
+      }
+      case final IvKeyReleased ignored -> {
+        this.keyEvent.onKeyEvent(event);
+      }
     }
   }
 
@@ -519,7 +621,7 @@ public final class IvHorizontalPiano
         keyPressed.key();
 
       LOG.trace("KeyPressed: {}", addedKey);
-      this.keyEvent.onKeyEvent(
+      this.publishKeyEvent(
         new IvKeyPressed(addedKey.index(), keyPressed.isSynthesized())
       );
 
@@ -540,7 +642,7 @@ public final class IvHorizontalPiano
         keyPressed.key();
 
       LOG.trace("KeyReleased: {}", removedKey);
-      this.keyEvent.onKeyEvent(
+      this.publishKeyEvent(
         new IvKeyReleased(removedKey.index(), keyPressed.isSynthesized())
       );
 

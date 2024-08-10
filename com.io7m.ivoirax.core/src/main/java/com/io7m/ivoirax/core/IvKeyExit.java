@@ -14,13 +14,22 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * JavaFX piano component (Core).
- */
 
-@Export
-@Version("1.1.0")
 package com.io7m.ivoirax.core;
 
-import org.osgi.annotation.bundle.Export;
-import org.osgi.annotation.versioning.Version;
+/**
+ * The cursor is no longer over a key.
+ *
+ * @param index The key index
+ */
+
+public record IvKeyExit(
+  int index)
+  implements IvKeyEventType
+{
+  @Override
+  public String toString()
+  {
+    return "[IvKeyExit %d]".formatted(this.index);
+  }
+}

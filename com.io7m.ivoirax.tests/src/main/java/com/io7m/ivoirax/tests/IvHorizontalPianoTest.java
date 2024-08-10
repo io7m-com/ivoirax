@@ -18,6 +18,7 @@
 package com.io7m.ivoirax.tests;
 
 import com.io7m.ivoirax.core.IvHorizontalPiano;
+import com.io7m.ivoirax.core.IvKeyEnter;
 import com.io7m.ivoirax.core.IvKeyEventType;
 import com.io7m.ivoirax.core.IvKeyPressed;
 import com.io7m.ivoirax.core.IvKeyReleased;
@@ -27,6 +28,7 @@ import com.io7m.xoanon.extension.XoExtension;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -48,6 +50,101 @@ public final class IvHorizontalPianoTest
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(IvHorizontalPianoTest.class);
+
+  private List<IvKeyEventType> events;
+
+  private static void clickKey(
+    final XCRobotType robot,
+    final IvHorizontalPiano piano,
+    final int index)
+    throws Exception
+  {
+    robot.evaluate(() -> {
+      final var x =
+        piano.xPositionCenterOf(index);
+      final var position =
+        piano.localToScreen(x, 16.0);
+
+      robot.robot().mouseMove(position);
+      return null;
+    });
+
+    robot.execute(() -> {
+      robot.robot().mousePress(MouseButton.PRIMARY);
+    });
+    robot.waitForFrames(60);
+
+    /*
+     * Releasing the second button does nothing.
+     */
+
+    robot.execute(() -> {
+      robot.robot().mouseRelease(MouseButton.SECONDARY);
+    });
+    robot.waitForFrames(60);
+
+    robot.execute(() -> {
+      robot.robot().mouseRelease(MouseButton.PRIMARY);
+    });
+    robot.waitForFrames(60);
+  }
+
+  private static void clickKeySecondary(
+    final XCRobotType robot,
+    final IvHorizontalPiano piano,
+    final int index)
+    throws Exception
+  {
+    robot.evaluate(() -> {
+      final var x =
+        piano.xPositionCenterOf(index);
+      final var position =
+        piano.localToScreen(x, 16.0);
+
+      robot.robot().mouseMove(position);
+      return null;
+    });
+
+    robot.execute(() -> {
+      robot.robot().mousePress(MouseButton.SECONDARY);
+    });
+    robot.waitForFrames(60);
+
+    robot.execute(() -> {
+      robot.robot().mouseRelease(MouseButton.SECONDARY);
+    });
+    robot.waitForFrames(60);
+  }
+
+  private void eventContains(
+    final IvKeyEventType e)
+  {
+    assertTrue(
+      this.events.contains(e),
+      "Events must contain %s".formatted(e)
+    );
+  }
+
+  private void eventIsBefore(
+    final IvKeyEventType e0,
+    final IvKeyEventType e1)
+  {
+    assertTrue(
+      this.events.indexOf(e0) < this.events.indexOf(e1),
+      "Event %s must be before event %s".formatted(e0, e1)
+    );
+  }
+
+  private void dumpEvents()
+  {
+    this.events.forEach(event -> LOG.debug("Event: {}", event));
+  }
+
+  @BeforeEach
+  public void setup()
+  {
+    this.events = Collections.synchronizedList(new ArrayList<>());
+  }
 
   /**
    * The piano must have at least one key.
@@ -172,9 +269,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -187,7 +281,7 @@ public final class IvHorizontalPianoTest
       throw new IllegalArgumentException();
     });
     clickKey(robot, piano, 7);
-    assertEquals(0, events.size());
+    assertEquals(0, this.events.size());
   }
 
   /**
@@ -205,9 +299,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -216,10 +307,19 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
     clickKey(robot, piano, 7);
 
-    checkPressRelease(events, 0, 7);
+    final var kp0 = new IvKeyPressed(7, false);
+    final var kr0 = new IvKeyReleased(7, false);
+    final var ken0 = new IvKeyEnter(7);
+
+    this.dumpEvents();
+    this.eventContains(kp0);
+    this.eventContains(kr0);
+    this.eventContains(ken0);
+    this.eventIsBefore(ken0, kp0);
+    this.eventIsBefore(kp0, kr0);
   }
 
   /**
@@ -237,9 +337,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -248,10 +345,19 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
     clickKey(robot, piano, 8);
 
-    checkPressRelease(events, 0, 8);
+    final var kp0 = new IvKeyPressed(8, false);
+    final var kr0 = new IvKeyReleased(8, false);
+    final var ken0 = new IvKeyEnter(8);
+
+    this.dumpEvents();
+    this.eventContains(kp0);
+    this.eventContains(kr0);
+    this.eventContains(ken0);
+    this.eventIsBefore(ken0, kp0);
+    this.eventIsBefore(kp0, kr0);
   }
 
   /**
@@ -269,9 +375,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -280,9 +383,12 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
     clickKeySecondary(robot, piano, 7);
-    assertEquals(0, events.size());
+
+    final var ken0 = new IvKeyEnter(7);
+    this.dumpEvents();
+    this.eventContains(ken0);
   }
 
   /**
@@ -300,9 +406,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -311,9 +414,13 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
     clickKeySecondary(robot, piano, 8);
-    assertEquals(0, events.size());
+
+    final var ken0 = new IvKeyEnter(8);
+
+    this.dumpEvents();
+    this.eventContains(ken0);
   }
 
   /**
@@ -331,9 +438,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -342,7 +446,7 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
     piano.naturalKeyWidthProperty().set(32.0);
     clickKey(robot, piano, 1);
     clickKey(robot, piano, 2);
@@ -350,10 +454,24 @@ public final class IvHorizontalPianoTest
     clickKey(robot, piano, 1);
     clickKey(robot, piano, 2);
 
-    checkPressRelease(events, 0, 1);
-    checkPressRelease(events, 2, 2);
-    checkPressRelease(events, 4, 1);
-    checkPressRelease(events, 6, 2);
+    final var ken1 = new IvKeyEnter(1);
+    final var ken2 = new IvKeyEnter(2);
+    final var kp1 = new IvKeyPressed(1, false);
+    final var kp2 = new IvKeyPressed(2, false);
+    final var kr1 = new IvKeyReleased(1, false);
+    final var kr2 = new IvKeyReleased(2, false);
+
+    this.dumpEvents();
+    this.eventContains(ken1);
+    this.eventContains(ken2);
+    this.eventContains(kp1);
+    this.eventContains(kp2);
+    this.eventContains(kr1);
+    this.eventContains(kr2);
+    this.eventIsBefore(ken2, kp2);
+    this.eventIsBefore(kp2, kr2);
+    this.eventIsBefore(ken1, kp1);
+    this.eventIsBefore(kp1, kr1);
   }
 
   /**
@@ -371,9 +489,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -382,7 +497,7 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
 
     robot.evaluate(() -> {
       final var x =
@@ -419,8 +534,10 @@ public final class IvHorizontalPianoTest
     });
     robot.waitForFrames(100);
 
-    this.dumpEvents(events);
-
+    this.dumpEvents();
+    final var ken0 = new IvKeyEnter(0);
+    final var ken1 = new IvKeyEnter(1);
+    final var ken2 = new IvKeyEnter(2);
     final var kp0 = new IvKeyPressed(0, false);
     final var kp1 = new IvKeyPressed(1, false);
     final var kp2 = new IvKeyPressed(2, false);
@@ -428,50 +545,22 @@ public final class IvHorizontalPianoTest
     final var kr1 = new IvKeyReleased(1, false);
     final var kr2 = new IvKeyReleased(2, false);
 
-    assertTrue(
-      events.contains(kp0),
-      "Events must contain %s".formatted(kp0)
-    );
-    assertTrue(
-      events.contains(kp1),
-      "Events must contain %s".formatted(kp1)
-    );
-    assertTrue(
-      events.contains(kp2),
-      "Events must contain %s".formatted(kp2)
-    );
-
-    assertTrue(
-      events.contains(kr0),
-      "Events must contain %s".formatted(kr0)
-    );
-    assertTrue(
-      events.contains(kr1),
-      "Events must contain %s".formatted(kr1)
-    );
-    assertTrue(
-      events.contains(kr2),
-      "Events must contain %s".formatted(kr2)
-    );
-
-    assertTrue(
-      events.indexOf(kp0) < events.indexOf(kr0),
-      "Event %s must be before %s".formatted(kp0, kr0)
-    );
-    assertTrue(
-      events.indexOf(kp1) < events.indexOf(kr1),
-      "Event %s must be before %s".formatted(kp1, kr1)
-    );
-    assertTrue(
-      events.indexOf(kp2) < events.indexOf(kr2),
-      "Event %s must be before %s".formatted(kp2, kr2)
-    );
-  }
-
-  private void dumpEvents(
-    final List<IvKeyEventType> events)
-  {
-    events.forEach(event -> LOG.debug("Event: {}", event));
+    this.dumpEvents();
+    this.eventContains(ken0);
+    this.eventContains(ken1);
+    this.eventContains(ken2);
+    this.eventContains(kp0);
+    this.eventContains(kp1);
+    this.eventContains(kp2);
+    this.eventContains(kr0);
+    this.eventContains(kr1);
+    this.eventContains(kr2);
+    this.eventIsBefore(ken2, kp2);
+    this.eventIsBefore(kp2, kr2);
+    this.eventIsBefore(ken1, kp1);
+    this.eventIsBefore(kp1, kr1);
+    this.eventIsBefore(ken0, kp0);
+    this.eventIsBefore(kp0, kr0);
   }
 
   /**
@@ -489,9 +578,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -500,7 +586,7 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
 
     robot.evaluate(() -> {
       final var x =
@@ -537,8 +623,10 @@ public final class IvHorizontalPianoTest
     });
     robot.waitForFrames(100);
 
-    this.dumpEvents(events);
-
+    this.dumpEvents();
+    final var ken1 = new IvKeyEnter(1);
+    final var ken2 = new IvKeyEnter(2);
+    final var ken3 = new IvKeyEnter(3);
     final var kp1 = new IvKeyPressed(1, false);
     final var kp2 = new IvKeyPressed(2, false);
     final var kp3 = new IvKeyPressed(3, false);
@@ -546,127 +634,22 @@ public final class IvHorizontalPianoTest
     final var kr2 = new IvKeyReleased(2, false);
     final var kr3 = new IvKeyReleased(3, false);
 
-    assertTrue(
-      events.contains(kp1),
-      "Events must contain %s".formatted(kp1)
-    );
-    assertTrue(
-      events.contains(kp2),
-      "Events must contain %s".formatted(kp2)
-    );
-    assertTrue(
-      events.contains(kp3),
-      "Events must contain %s".formatted(kp3)
-    );
-
-    assertTrue(
-      events.contains(kr1),
-      "Events must contain %s".formatted(kr1)
-    );
-    assertTrue(
-      events.contains(kr2),
-      "Events must contain %s".formatted(kr2)
-    );
-    assertTrue(
-      events.contains(kr3),
-      "Events must contain %s".formatted(kr3)
-    );
-
-    assertTrue(
-      events.indexOf(kp1) < events.indexOf(kr1),
-      "Event %s must be before %s".formatted(kp1, kr1)
-    );
-    assertTrue(
-      events.indexOf(kp2) < events.indexOf(kr2),
-      "Event %s must be before %s".formatted(kp2, kr2)
-    );
-    assertTrue(
-      events.indexOf(kp3) < events.indexOf(kr3),
-      "Event %s must be before %s".formatted(kp3, kr3)
-    );
-  }
-
-  private static void checkPressRelease(
-    final List<IvKeyEventType> events,
-    final int eventIndex,
-    final int expected)
-  {
-    {
-      final var e =
-        assertInstanceOf(IvKeyPressed.class, events.get(eventIndex));
-      assertEquals(expected, e.index());
-      assertFalse(e.isSynthesized());
-    }
-
-    {
-      final var e =
-        assertInstanceOf(IvKeyReleased.class, events.get(eventIndex + 1));
-      assertEquals(expected, e.index());
-      assertFalse(e.isSynthesized());
-    }
-  }
-
-  private static void clickKey(
-    final XCRobotType robot,
-    final IvHorizontalPiano piano,
-    final int index)
-    throws Exception
-  {
-    robot.evaluate(() -> {
-      final var x =
-        piano.xPositionCenterOf(index);
-      final var position =
-        piano.localToScreen(x, 16.0);
-
-      robot.robot().mouseMove(position);
-      return null;
-    });
-
-    robot.execute(() -> {
-      robot.robot().mousePress(MouseButton.PRIMARY);
-    });
-    robot.waitForFrames(60);
-
-    /*
-     * Releasing the second button does nothing.
-     */
-
-    robot.execute(() -> {
-      robot.robot().mouseRelease(MouseButton.SECONDARY);
-    });
-    robot.waitForFrames(60);
-
-    robot.execute(() -> {
-      robot.robot().mouseRelease(MouseButton.PRIMARY);
-    });
-    robot.waitForFrames(60);
-  }
-
-  private static void clickKeySecondary(
-    final XCRobotType robot,
-    final IvHorizontalPiano piano,
-    final int index)
-    throws Exception
-  {
-    robot.evaluate(() -> {
-      final var x =
-        piano.xPositionCenterOf(index);
-      final var position =
-        piano.localToScreen(x, 16.0);
-
-      robot.robot().mouseMove(position);
-      return null;
-    });
-
-    robot.execute(() -> {
-      robot.robot().mousePress(MouseButton.SECONDARY);
-    });
-    robot.waitForFrames(60);
-
-    robot.execute(() -> {
-      robot.robot().mouseRelease(MouseButton.SECONDARY);
-    });
-    robot.waitForFrames(60);
+    this.dumpEvents();
+    this.eventContains(ken1);
+    this.eventContains(ken2);
+    this.eventContains(ken3);
+    this.eventContains(kp1);
+    this.eventContains(kp2);
+    this.eventContains(kp3);
+    this.eventContains(kr1);
+    this.eventContains(kr2);
+    this.eventContains(kr3);
+    this.eventIsBefore(ken3, kp3);
+    this.eventIsBefore(kp3, kr3);
+    this.eventIsBefore(ken2, kp2);
+    this.eventIsBefore(kp2, kr2);
+    this.eventIsBefore(ken1, kp1);
+    this.eventIsBefore(kp1, kr1);
   }
 
   /**
@@ -684,9 +667,6 @@ public final class IvHorizontalPianoTest
     final XCRobotType robot)
     throws Exception
   {
-    final var events =
-      Collections.synchronizedList(new ArrayList<IvKeyEventType>());
-
     final var pianoView = new AtomicReference<IvHorizontalPiano>();
     commander.stageNewAndWait(newStage -> {
       final var view = new IvHorizontalPiano();
@@ -695,7 +675,7 @@ public final class IvHorizontalPianoTest
     });
 
     final var piano = pianoView.get();
-    piano.setOnKeyEventHandler(events::add);
+    piano.setOnKeyEventHandler(this.events::add);
 
     robot.execute(() -> {
       piano.keyPress(1);
@@ -726,14 +706,14 @@ public final class IvHorizontalPianoTest
 
     {
       final var e =
-        assertInstanceOf(IvKeyPressed.class, events.get(0));
+        assertInstanceOf(IvKeyPressed.class, this.events.get(0));
       assertEquals(1, e.index());
       assertTrue(e.isSynthesized());
     }
 
     {
       final var e =
-        assertInstanceOf(IvKeyReleased.class, events.get(1));
+        assertInstanceOf(IvKeyReleased.class, this.events.get(1));
       assertEquals(1, e.index());
       assertTrue(e.isSynthesized());
     }

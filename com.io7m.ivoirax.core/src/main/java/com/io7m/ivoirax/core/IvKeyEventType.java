@@ -22,8 +22,7 @@ package com.io7m.ivoirax.core;
  */
 
 public sealed interface IvKeyEventType
-  permits IvKeyPressed,
-  IvKeyReleased
+  permits IvKeyExit, IvKeyEnter, IvKeyPressed, IvKeyReleased
 {
 
 }

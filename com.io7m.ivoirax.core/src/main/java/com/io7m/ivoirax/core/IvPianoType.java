@@ -27,6 +27,37 @@ import javafx.scene.paint.Paint;
 public interface IvPianoType
 {
   /**
+   * @return The stroke color used for accidental (black) keys when not over or pressed
+   */
+
+  default Paint colorStrokeKeyAccidental()
+  {
+    return this.colorStrokeKeyAccidentalProperty().get();
+  }
+
+  /**
+   * @return The stroke color used for accidental (black) keys when not over or pressed
+   */
+
+  SimpleObjectProperty<Paint> colorStrokeKeyAccidentalProperty();
+
+  /**
+   * @return The stroke color used for natural (white) keys when not over or pressed
+   */
+
+  default Paint colorStrokeKeyNatural()
+  {
+    return this.colorStrokeKeyNaturalProperty().get();
+  }
+
+  /**
+   * @return The stroke color used for natural (white) keys when not over or pressed
+   */
+
+  SimpleObjectProperty<Paint> colorStrokeKeyNaturalProperty();
+
+
+  /**
    * @return The color used for accidental (black) keys when not over or pressed
    */
 
@@ -115,6 +146,21 @@ public interface IvPianoType
    */
 
   SimpleObjectProperty<Paint> colorKeyNaturalPressedProperty();
+
+  /**
+   * @return The color used for the text on keys
+   */
+
+  default Paint colorKeyText()
+  {
+    return this.colorKeyTextProperty().get();
+  }
+
+  /**
+   * @return The color used for the text on keys
+   */
+
+  SimpleObjectProperty<Paint> colorKeyTextProperty();
 
   /**
    * @return The number of keys on the keyboard
