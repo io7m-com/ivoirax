@@ -46,7 +46,7 @@
     <net.jqwik.version>1.9.2</net.jqwik.version>
     <org.javafx.version>23.0.2</org.javafx.version>
     <org.junit.version>5.12.1</org.junit.version>
-    <org.slf4j.version>2.0.16</org.slf4j.version>
+    <org.slf4j.version>2.0.17</org.slf4j.version>
   </properties>
 
   <licenses>
