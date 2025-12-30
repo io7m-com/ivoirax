@@ -11,7 +11,7 @@
 
   <groupId>com.io7m.ivoirax</groupId>
   <artifactId>com.io7m.ivoirax</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.ivoirax</name>
@@ -29,7 +29,7 @@
 
     <!-- Configuration. -->
     <io7m.api.previousVersion>0.0.2</io7m.api.previousVersion>
-    <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
+    <io7m.java.targetJavaVersion>25</io7m.java.targetJavaVersion>
 
     <!-- io7m dependencies. -->
     <com.io7m.jaffirm.version>4.0.1</com.io7m.jaffirm.version>
@@ -44,7 +44,7 @@
     <!-- Third-party dependencies. -->
     <ch.qos.logback.version>1.5.20</ch.qos.logback.version>
     <net.jqwik.version>1.9.3</net.jqwik.version>
-    <org.javafx.version>23.0.2</org.javafx.version>
+    <org.javafx.version>25.0.1</org.javafx.version>
     <org.junit.version>5.14.1</org.junit.version>
     <org.slf4j.version>2.0.17</org.slf4j.version>
   </properties>
