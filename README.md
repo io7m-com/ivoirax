@@ -4,7 +4,7 @@ ivoirax
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.ivoirax/com.io7m.ivoirax.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.ivoirax%22)
 [![Maven Central (snapshot)](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fcom%2Fio7m%2Fivoirax%2Fcom.io7m.ivoirax%2Fmaven-metadata.xml&style=flat-square)](https://central.sonatype.com/repository/maven-snapshots/com/io7m/ivoirax/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m-com/ivoirax.svg?style=flat-square)](https://codecov.io/gh/io7m-com/ivoirax)
-![Java Version](https://img.shields.io/badge/21-java?label=java&color=e6c35c)
+![Java Version](https://img.shields.io/badge/25-java?label=java&color=5ce67e)
 
 ![com.io7m.ivoirax](./src/site/resources/ivoirax.jpg?raw=true)
 
@@ -25,7 +25,7 @@ A JavaFX piano component.
 * Display a configurable number of octaves.
 * Capture key press/release events.
 * Available in horizontal and vertical forms.
-* Written in pure Java 21.
+* Written in pure Java 25.
 * [OSGi-ready](https://www.osgi.org/).
 * [JPMS-ready](https://en.wikipedia.org/wiki/Java_Platform_Module_System).
 * ISC license.
