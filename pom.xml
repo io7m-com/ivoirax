@@ -11,7 +11,7 @@
 
   <groupId>com.io7m.ivoirax</groupId>
   <artifactId>com.io7m.ivoirax</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.ivoirax</name>
@@ -28,7 +28,7 @@
     <io7m.workID>241caa34-270c-4291-b708-3d05719bf5ac</io7m.workID>
 
     <!-- Configuration. -->
-    <io7m.api.previousVersion>0.0.2</io7m.api.previousVersion>
+    <io7m.api.previousVersion>1.0.0</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>25</io7m.java.targetJavaVersion>
 
     <!-- io7m dependencies. -->
