@@ -9,7 +9,7 @@ A JavaFX piano component.
 * Display a configurable number of octaves.
 * Capture key press/release events.
 * Available in horizontal and vertical forms.
-* Written in pure Java 21.
+* Written in pure Java 25.
 * [OSGi-ready](https://www.osgi.org/).
 * [JPMS-ready](https://en.wikipedia.org/wiki/Java_Platform_Module_System).
 * ISC license.
