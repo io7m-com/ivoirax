@@ -42,7 +42,7 @@
     <com.io7m.xstructural.version>1.8.1</com.io7m.xstructural.version>
 
     <!-- Third-party dependencies. -->
-    <ch.qos.logback.version>1.5.21</ch.qos.logback.version>
+    <ch.qos.logback.version>1.5.24</ch.qos.logback.version>
     <net.jqwik.version>1.9.3</net.jqwik.version>
     <org.javafx.version>25.0.2-ea+3</org.javafx.version>
     <org.junit.version>5.14.1</org.junit.version>
