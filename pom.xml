@@ -45,7 +45,7 @@
     <ch.qos.logback.version>1.5.21</ch.qos.logback.version>
     <net.jqwik.version>1.9.3</net.jqwik.version>
     <org.javafx.version>25.0.2-ea+3</org.javafx.version>
-    <org.junit.version>5.14.1</org.junit.version>
+    <org.junit.version>5.14.2</org.junit.version>
     <org.slf4j.version>2.0.17</org.slf4j.version>
   </properties>
 
